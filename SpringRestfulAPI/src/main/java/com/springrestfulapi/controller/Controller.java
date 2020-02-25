@@ -9,7 +9,7 @@ public class Controller {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String showLoginPage() {
-		return "Login successful";
+		return "Please login";
 	}
 
 	@RequestMapping(value = "/loginx", method = RequestMethod.GET)
@@ -23,6 +23,16 @@ public class Controller {
 		return "Hi there";
 	}
 
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
+	public String signup() {
+		return "signup page";
+	}
+
+	@RequestMapping(value = "/about", method = RequestMethod.GET)
+	public String about() {
+		return "about page";
+	}
+	
 	@RequestMapping(value = "/hellox", method = RequestMethod.GET)
 	public String sayHello2() {
 		return "Hi there x";

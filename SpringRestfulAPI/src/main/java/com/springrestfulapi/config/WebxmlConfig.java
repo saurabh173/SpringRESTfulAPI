@@ -2,6 +2,8 @@ package com.springrestfulapi.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import com.springrestfulapi.security.SecurityConfiguration;
+
 
 
 
@@ -10,9 +12,9 @@ public class WebxmlConfig extends AbstractAnnotationConfigDispatcherServletIniti
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		// TODO Auto-generated method stub
-		return null;
+		//return null;
 		//Ref: https://spring.io/blog/2013/07/03/spring-security-java-config-preview-web-security
-		//return new Class[] { SecurityConfiguration.class };
+		return new Class[] { SecurityConfiguration.class };
 	}
 
 	@Override
