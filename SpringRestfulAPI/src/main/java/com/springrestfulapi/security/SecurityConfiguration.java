@@ -10,8 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration
-   extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
 
 	@Autowired
@@ -37,13 +36,15 @@ public class SecurityConfiguration
 	  @Override
 	  protected void configure(HttpSecurity http) throws Exception {
 	    http
+	      .csrf().disable()
 	      .authorizeRequests()
 	        .antMatchers("/signup","/about").permitAll() // #4
 	        .antMatchers("/admin/**").hasRole("ADMIN") // #6
 	        .anyRequest().authenticated() // 7
 	        .and()
 	    .formLogin()  // #8
-	        .loginPage("/login") // #9
+	        .loginPage("/login.jsp") // #9
+	        //.defaultSuccessUrl("/welcome")
 	        .permitAll(); // #5
 	  }
 }
