@@ -24,11 +24,27 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
    private Environment env;
 
 	@Autowired
-	  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {		
-		auth
-		.ldapAuthentication()
-        .userSearchFilter("(sAMAccountName={0})")
-        .contextSource(contextSource());
+	  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {	
+		
+		
+		if (env.getProperty("ldap.enabled").equalsIgnoreCase("yes") ) {
+			auth
+			.ldapAuthentication()
+			.userDnPatterns(env.getProperty("ldap.usrdnpattern"))
+	        .userSearchFilter("(sAMAccountName={0})")
+	        .contextSource(contextSource());			
+		} else {
+			auth
+		      .inMemoryAuthentication()
+		        .withUser("user")  // #1
+		          .password("password")
+		          .roles("USER")
+		          .and()
+		        .withUser("admin") // #2
+		          .password("password")
+		          .roles("ADMIN","USER");
+		}
+
 
 	  }
 	
