@@ -1,14 +1,69 @@
 package com.springrestfulapi.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.springrestfulapi.model.AuthenticationRequest;
+import com.springrestfulapi.model.AuthenticationResponse;
+import com.springrestfulapi.security.JwtUtil;
+import com.springrestfulapi.security.MyUserDetailsService;
+
+//REF: https://www.youtube.com/watch?v=X80nJ5T7YpE
+//REF: https://dzone.com/articles/spring-boot-security-json-web-tokenjwt-hello-world
+	
 @RestController
 public class Controller {
 
+	//Spring Provided authentication manager
+	@Autowired 
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) 
+			throws Exception {
+		
+		try {
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+								authenticationRequest.getUsername(),
+								authenticationRequest.getPassword()
+				
+										)
+				);
+		}catch (DisabledException e) {
+			throw new Exception("USER_DISABLED", e);
+		} catch (BadCredentialsException e) {
+		throw new Exception("INVALID_CREDENTIALS", e);
+		}
+		
+		final UserDetails userDetails = userDetailsService
+				.loadUserByUsername(authenticationRequest.getUsername());
+		
+		final String jwt = jwtUtil.generateToken(userDetails);
+		
+		//SM: Standard Spring response entity
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		
+		
+	}
+	
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public ModelAndView welcomePage() {
 
