@@ -53,10 +53,10 @@ public class Controller {
 		throw new Exception("INVALID_CREDENTIALS", e);
 		}
 		
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getUsername());
+		//final UserDetails userDetails = userDetailsService
+		//		.loadUserByUsername(authenticationRequest.getUsername());
 		
-		final String jwt = jwtUtil.generateToken(userDetails);
+		final String jwt = jwtUtil.generateToken(authenticationRequest.getUsername());
 		
 		//SM: Standard Spring response entity
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));

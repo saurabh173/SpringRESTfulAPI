@@ -44,42 +44,42 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 	@Autowired
 	  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {	
 		//myUserDetailsService = new MyUserDetailsService();
-		auth.userDetailsService(myUserDetailsService);
+		//auth.userDetailsService(myUserDetailsService);
 		
-//		if (env.getProperty("ldap.enabled").equalsIgnoreCase("yes") ) {
-//			auth
-//			.ldapAuthentication()
-//			.userDnPatterns(env.getProperty("ldap.usrdnpattern"))
-//	        .userSearchFilter("(sAMAccountName={0})")
-//	        .contextSource(contextSource());			
-//		} else {
-//			auth
-//		      .inMemoryAuthentication()
-//		        .withUser("user")  // #1
-//		          .password("password")
-//		          .roles("USER")
-//		          .and()
-//		        .withUser("admin") // #2
-//		          .password("password")
-//		          .roles("ADMIN","USER");
-//		}
+		if (env.getProperty("ldap.enabled").equalsIgnoreCase("yes") ) {
+			auth
+			.ldapAuthentication()
+			.userDnPatterns(env.getProperty("ldap.usrdnpattern"))
+	        .userSearchFilter("(sAMAccountName={0})")
+	        .contextSource(contextSource());			
+		} else {
+			auth
+		      .inMemoryAuthentication()
+		        .withUser("user")  // #1
+		          .password("password")
+		          .roles("USER")
+		          .and()
+		        .withUser("admin") // #2
+		          .password("password")
+		          .roles("ADMIN","USER");
+		}
 
 
 	  }
 	
-//    @Bean
-//    public BaseLdapPathContextSource contextSource() {
-//        LdapContextSource bean = new LdapContextSource();
-//        bean.setUrl(env.getProperty("ldap.urls"));
-//        bean.setBase(env.getProperty("ldap.base"));
-// 
-//        bean.setUserDn(env.getProperty("ldap.admuserdn"));
-//        bean.setPassword(env.getProperty("ldap.admpassword"));
-//        bean.setPooled(true);
-//        bean.setReferral("follow");
-//        bean.afterPropertiesSet();
-//        return bean;
-//    }
+    @Bean
+    public BaseLdapPathContextSource contextSource() {
+        LdapContextSource bean = new LdapContextSource();
+        bean.setUrl(env.getProperty("ldap.urls"));
+        bean.setBase(env.getProperty("ldap.base"));
+ 
+        bean.setUserDn(env.getProperty("ldap.admuserdn"));
+        bean.setPassword(env.getProperty("ldap.admpassword"));
+        bean.setPooled(true);
+        bean.setReferral("follow");
+        bean.afterPropertiesSet();
+        return bean;
+    }
 	
 	//SM: Below bean was not required in earlier version of Spring
 	@Override  

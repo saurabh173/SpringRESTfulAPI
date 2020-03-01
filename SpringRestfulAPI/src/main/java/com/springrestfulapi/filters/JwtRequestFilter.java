@@ -58,12 +58,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		
 		// Once we get the token validate it. Only if the context does not have the user already
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
+			
+			//UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(username);
+			
 			// if token is valid configure Spring Security to manually set
 			// authentication
 			
 			System.out.println("Checking Token Valiadtion");
-			if (jwtUtil.validateToken(jwtToken, userDetails)) {
+			if (jwtUtil.validateToken(jwtToken, username)) {
 				
 				System.out.println("Token is valid");
 				
@@ -71,16 +73,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				// from spring security. This would have happened by default by Spring but
 				// in here we are doing it only if token is valid
 				
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-				userDetails, null, userDetails.getAuthorities());
-				
-				usernamePasswordAuthenticationToken
-				.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+//				userDetails, null, userDetails.getAuthorities());
+//				
+//				usernamePasswordAuthenticationToken
+//				.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				
 				// After setting the Authentication in the context, we specify
 				// that the current user is authenticated. So it passes the
 				// Spring Security Configurations successfully.
-				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+//				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+				SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("a", null, null));
 			}
 		}
 		filterChain.doFilter(request, response);

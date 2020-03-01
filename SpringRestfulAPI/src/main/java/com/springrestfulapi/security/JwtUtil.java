@@ -40,9 +40,9 @@ public class JwtUtil {
 	return expiration.before(new Date());
 	}
 	//generate token for user
-	public String generateToken(UserDetails userDetails) {
-	Map<String, Object> claims = new HashMap<>();
-	return doGenerateToken(claims, userDetails.getUsername());
+	public String generateToken(String userName) {
+		Map<String, Object> claims = new HashMap<>();
+		return doGenerateToken(claims, userName);
 	}
 	//while creating the token -
 	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
@@ -52,14 +52,14 @@ public class JwtUtil {
 	
 	//Subject is the person who has been authenticated. 
 	//In this case user name is being set as subject
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+	private String doGenerateToken(Map<String, Object> claims, String userName) {
+		return Jwts.builder().setClaims(claims).setSubject(userName).setIssuedAt(new Date(System.currentTimeMillis()))
 		.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 		.signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
 	}
 	//validate token
-	public Boolean validateToken(String token, UserDetails userDetails) {
-	final String username = getUsernameFromToken(token);
-	return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	public Boolean validateToken(String token, String userName) {
+		//final String username = getUsernameFromToken(token);
+		return ( !isTokenExpired(token));
 	}
 }
